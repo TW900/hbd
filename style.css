@@ -26,11 +26,12 @@
 
 html, body {
   width: 100%; height: 100%;
-  overflow: hidden;
+  overflow-x: hidden; /* فقط جلو اسکرول چپ و راست را بگیر */
+  overflow-y: auto;   /* اجازه بده در صورت نیاز اسکرول عمودی بخورد */
   font-family: var(--font-body);
   background: #f0d6e8;
   -webkit-tap-highlight-color: transparent;
-  touch-action: none;
+  touch-action: pan-y; /* اسکرول عمودی با لمس آزاد شد */
 }
 
 /* ------------------------------------------------
@@ -70,14 +71,19 @@ html, body {
    SLIDES WRAPPER
 ------------------------------------------------ */
 .slides-wrapper {
-  width: 100%; height: 100vh;
+  width: 100%;
+  min-height: 100vh; /* تغییر از height به min-height */
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto; /* اگر کل اسلایدها بیرون زد، اسکرول بخورد */
 }
 
 .slide {
   position: absolute; inset: 0;
-  width: 100%; height: 100%;
+  width: 100%; 
+  height: 100%;
+  overflow-y: auto; /* 🌟 مهم‌ترین بخش: هر اسلاید اگر محتوایش بزرگ بود خودش اسکرول داخلی می‌خورد */
+  -webkit-overflow-scrolling: touch; /* اسکرول نرم در آیفون */
   transition: opacity .7s cubic-bezier(.4,0,.2,1), transform .7s cubic-bezier(.4,0,.2,1);
 }
 .slide.hidden-slide {
@@ -97,12 +103,15 @@ html, body {
 #slide-lock { z-index: 10; }
 
 .lock-bg {
-  width: 100%; height: 100%;
+  width: 100%; 
+  min-height: 100%; /* تغییر از height: 100% */
   background: linear-gradient(160deg, #1a0a2e 0%, #3b1055 40%, #6b2a7a 70%, #a04090 100%);
-  display: flex; flex-direction: column;
+  display: flex; 
+  flex-direction: column;
   align-items: center;
   position: relative;
-  overflow: hidden;
+  overflow-y: auto; /* اگر کیپد بزرگ بود اسکرول شود */
+  padding-bottom: 30px; /* فضای امن در پایین صفحه */
 }
 
 /* starfield */
@@ -142,7 +151,8 @@ html, body {
 .lock-center {
   position: relative; z-index: 2;
   text-align: center;
-  margin-top: 30px;
+  margin-top: 20px;
+  margin-bottom: 20px; /* یک فاصله منطقی */
   flex: 1;
   display: flex; flex-direction: column; justify-content: center; align-items: center;
 }
@@ -670,17 +680,53 @@ html, body {
 }
 
 /* ================================================
-   RESPONSIVE TWEAKS
+   RESPONSIVE TWEAKS (نسخه اصلاح شده و منعطف)
 ================================================ */
+
+/* برای گوشی‌های کم‌عرض (مثل آیفون SE یا گوشی‌های قدیمی) */
 @media (max-width: 360px) {
-  .key { width: 62px; height: 62px; }
-  .key span { font-size: 24px; }
-  .slide-unlock-track { width: 230px; }
-  .hero-glass { padding: 28px 20px 24px; }
+  .key { 
+    width: 58px; 
+    height: 58px; 
+  }
+  .key span { font-size: 22px; }
+  .key small { display: none; } /* حذف نوشته‌های ABC برای باز شدن فضا */
+  .pin-area { gap: 10px; }
+  .slide-unlock-track { width: 210px; height: 44px; }
+  .slide-unlock-thumb { width: 36px; height: 36px; }
+  .hero-glass { padding: 20px 16px; }
+  .lock-clock { font-size: 60px; } /* کوچک‌تر شدن ساعت مچی صفحه قفل */
 }
+
+/* 🌟 خیلی مهم: برای گوشی‌های با ارتفاع کم (کمتر از 660 پیکسل) */
+@media (max-height: 660px) {
+  .lock-center { 
+    margin-top: 10px; 
+    margin-bottom: 10px; 
+  }
+  .lock-clock { font-size: 50px; } /* جمع و جور شدن ساعت */
+  .lock-date, .lock-subtitle { font-size: 13px; }
+  .key { 
+    width: 54px; 
+    height: 54px; 
+  }
+  .key span { font-size: 20px; }
+  .key small { display: none; }
+  .pin-area { gap: 8px; padding-bottom: 10px; }
+  .slide-unlock-track { height: 40px; width: 200px; }
+  .slide-unlock-thumb { width: 32px; height: 32px; }
+  .cake-container #birthdayCake { width: 200px; } /* کوچکتر شدن کیک در ارتفاع کم */
+}
+
+/* برای گوشی‌های بلند و مدرن */
 @media (min-height: 800px) {
   .pin-area { gap: 18px; }
 }
+
+/* رعایت دسترسی‌پذیری برای کسانی که انیمیشن دوست ندارند */
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  *, *::before, *::after { 
+    animation-duration: .01ms !important; 
+    transition-duration: .01ms !important; 
+  }
 }
