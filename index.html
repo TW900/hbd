@@ -1,675 +1,287 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>غزل 🌸</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Vazirmatn:wght@300;400;500&display=swap" rel="stylesheet">
-<style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-:root {
-  --rose:    #d4788a;
-  --rose-l:  #f2d5db;
-  --rose-ll: #fdf0f2;
-  --blush:   #edddd4;
-  --sage:    #b5c4b1;
-  --cream:   #faf7f4;
-  --warm:    #f5ede6;
-  --text:    #3d2c2c;
-  --text-m:  #7a5a5a;
-  --text-l:  #b89090;
-}
-
-html, body {
-  background: var(--cream);
-  font-family: 'Vazirmatn', sans-serif;
-  min-height: 100vh;
-  overflow: hidden;
-  color: var(--text);
-}
-
-/* ══ ANIMATED BG ══ */
-.bg {
-  position: fixed; inset: 0; z-index: 0;
-  background: var(--cream);
-  overflow: hidden;
-}
-.bg-petal {
-  position: absolute;
-  font-size: 28px;
-  opacity: 0;
-  animation: petal-drift linear infinite;
-  pointer-events: none;
-}
-@keyframes petal-drift {
-  0%   { transform: translateY(-60px) rotate(0deg);   opacity: 0; }
-  10%  { opacity: 0.55; }
-  90%  { opacity: 0.4; }
-  100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
-}
-
-/* ══ PAGES ══ */
-.page {
-  position: fixed; inset: 0; z-index: 10;
-  display: flex; align-items: center; justify-content: center;
-  padding: 28px 20px;
-  opacity: 0; pointer-events: none;
-  transition: opacity .55s cubic-bezier(.4,0,.2,1),
-              transform .55s cubic-bezier(.4,0,.2,1);
-  transform: translateY(22px);
-}
-.page.active  { opacity: 1; pointer-events: all; transform: translateY(0); }
-.page.out     { opacity: 0; transform: translateY(-18px); }
-
-/* ══ PANEL (replaces "card") ══ */
-.panel {
-  width: 100%; max-width: 380px;
-  background: #fff;
-  border-radius: 4px;
-  padding: 48px 40px 44px;
-  position: relative;
-  /* single delicate shadow */
-  box-shadow:
-    0 2px 6px rgba(60,30,30,.04),
-    0 12px 48px rgba(60,30,30,.07);
-}
-/* thin top rule in rose */
-.panel::before {
-  content: '';
-  position: absolute; top: 0; left: 40px; right: 40px; height: 1px;
-  background: linear-gradient(90deg, transparent, var(--rose), transparent);
-}
-
-/* ══ TYPE ══ */
-.eyebrow {
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic; font-size: 13px; font-weight: 300;
-  letter-spacing: .08em;
-  color: var(--rose); margin-bottom: 6px; text-align: center;
-}
-.display {
-  font-family: 'Cormorant Garamond', serif;
-  font-weight: 300; font-size: 46px; line-height: 1.05;
-  color: var(--text); text-align: center; margin-bottom: 6px;
-}
-.display em { font-style: italic; color: var(--rose); }
-.heading {
-  font-family: 'Cormorant Garamond', serif;
-  font-weight: 400; font-style: italic;
-  font-size: 26px; color: var(--text); text-align: center;
-  margin-bottom: 20px;
-}
-.body-text {
-  font-size: 14px; font-weight: 300; line-height: 2;
-  color: var(--text-m); text-align: center;
-}
-.caption {
-  font-size: 11px; letter-spacing: .18em; text-transform: uppercase;
-  color: var(--text-l); text-align: center; font-weight: 400;
-}
-
-/* ══ DIVIDER ══ */
-.divider {
-  display: flex; align-items: center; gap: 12px;
-  margin: 20px 0;
-}
-.divider::before,.divider::after {
-  content: ''; flex: 1; height: 1px;
-  background: var(--rose-l);
-}
-.divider-glyph { font-size: 14px; color: var(--rose-l); }
-
-/* ══ PIN ══ */
-.pin-area { margin: 28px 0 0; }
-.pin-dots {
-  display: flex; justify-content: center; gap: 12px; margin-bottom: 24px;
-}
-.dot {
-  width: 10px; height: 10px; border-radius: 50%;
-  border: 1.5px solid var(--rose-l);
-  background: transparent;
-  transition: all .2s ease;
-}
-.dot.on { background: var(--rose); border-color: var(--rose); transform: scale(1.15); }
-
-.numpad {
-  display: grid; grid-template-columns: repeat(3,1fr); gap: 8px;
-}
-.nk {
-  height: 52px; border: 1px solid var(--rose-l);
-  background: #fff; border-radius: 2px;
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 22px; font-weight: 400; color: var(--text);
-  cursor: pointer; transition: all .15s ease;
-  display: flex; align-items: center; justify-content: center;
-}
-.nk:hover { background: var(--rose-ll); border-color: var(--rose-l); }
-.nk:active { transform: scale(.95); }
-.nk.ghost { font-size: 15px; color: var(--text-l); font-family: 'Vazirmatn', sans-serif; font-weight: 300; }
-
-.err-msg {
-  font-size: 12px; color: var(--rose); text-align: center;
-  margin-top: 14px; opacity: 0; transition: opacity .25s;
-  font-weight: 300; letter-spacing: .03em;
-}
-.err-msg.show { opacity: 1; }
-
-/* ══ BTN ══ */
-.btn {
-  display: block; width: 100%; margin-top: 32px;
-  padding: 14px 0;
-  background: var(--text);
-  color: #fff; border: none; border-radius: 2px;
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 16px; font-weight: 400; font-style: italic;
-  letter-spacing: .06em; cursor: pointer;
-  transition: all .2s ease;
-}
-.btn:hover { background: var(--rose); }
-.btn:active { transform: scale(.99); }
-
-.btn-ghost {
-  display: block; width: 100%; margin-top: 12px;
-  padding: 12px 0; background: transparent;
-  border: 1px solid var(--rose-l); border-radius: 2px;
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 15px; font-style: italic;
-  color: var(--text-m); cursor: pointer;
-  transition: all .2s;
-}
-.btn-ghost:hover { border-color: var(--rose); color: var(--rose); }
-
-/* ══ STEPS INDICATOR ══ */
-.steps {
-  display: flex; justify-content: center; gap: 8px; margin-bottom: 32px;
-}
-.step { width: 24px; height: 2px; background: var(--rose-l); border-radius: 1px; transition: all .3s; }
-.step.done,.step.cur { background: var(--rose); }
-.step.cur { width: 36px; }
-
-/* ══ MESSAGE ══ */
-.message-block {
-  background: var(--warm); border-radius: 2px;
-  padding: 22px 24px; margin: 20px 0;
-  border-right: 2px solid var(--rose);
-  text-align: right;
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic; font-size: 17px; line-height: 2;
-  color: var(--text-m); font-weight: 300;
-}
-
-/* ══ CAKE ══ */
-.cake-wrap {
-  display: flex; flex-direction: column; align-items: center;
-  margin: 20px 0 8px; gap: 4px;
-}
-.cake-svg { width: 150px; height: 150px; cursor: pointer; }
-.flame-g { animation: flicker .15s ease-in-out infinite alternate; transform-origin: 50% 95%; }
-@keyframes flicker {
-  from { transform: scaleX(1) scaleY(1) rotate(-.5deg); }
-  to   { transform: scaleX(.88) scaleY(1.08) rotate(.8deg); }
-}
-.cake-tip { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--text-l); font-weight: 400; }
-
-/* ══ POLAROID PHOTOS ══ */
-.polaroid-wall {
-  position: relative; width: 100%; height: 220px;
-  margin: 4px 0 16px;
-}
-.polaroid {
-  position: absolute;
-  background: #fff;
-  padding: 10px 10px 28px;
-  box-shadow: 0 3px 12px rgba(60,30,30,.12), 0 1px 3px rgba(60,30,30,.07);
-  cursor: pointer; transition: transform .3s ease, box-shadow .3s ease;
-  user-select: none;
-}
-.polaroid:hover {
-  box-shadow: 0 8px 28px rgba(60,30,30,.18);
-  z-index: 5;
-}
-.polaroid img, .polaroid .ph-placeholder {
-  width: 120px; height: 110px;
-  object-fit: cover; display: block;
-  background: var(--warm);
-}
-.ph-placeholder {
-  display: flex; align-items: center; justify-content: center;
-  font-size: 28px; color: var(--rose-l);
-}
-.polaroid-label {
-  position: absolute; bottom: 7px; left: 0; right: 0;
-  text-align: center;
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic; font-size: 11px; color: var(--text-l); font-weight: 300;
-}
-
-/* static positions + rotations for 3 photos */
-.polaroid:nth-child(1) { left:10px;  top:20px; transform: rotate(-5deg); }
-.polaroid:nth-child(2) { left:50%;   top:8px;  transform: translateX(-50%) rotate(1.5deg); }
-.polaroid:nth-child(3) { right:10px; top:24px; transform: rotate(4.5deg); }
-
-.polaroid:nth-child(1):hover { transform: rotate(-5deg) scale(1.06); }
-.polaroid:nth-child(2):hover { transform: translateX(-50%) rotate(1.5deg) scale(1.06); }
-.polaroid:nth-child(3):hover { transform: rotate(4.5deg) scale(1.06); }
-
-/* ══ UPLOAD ══ */
-.upload-row {
-  display: flex; align-items: center; gap: 10px;
-  border: 1px dashed var(--rose-l); border-radius: 2px;
-  padding: 14px 16px; cursor: pointer;
-  transition: all .2s; margin-bottom: 8px;
-}
-.upload-row:hover { border-color: var(--rose); background: var(--rose-ll); }
-.upload-row span { font-size: 18px; }
-.upload-row p { font-size: 13px; color: var(--text-l); font-weight: 300; }
-#photo-input { display: none; }
-
-/* ══ LIGHTBOX ══ */
-#lb {
-  position: fixed; inset: 0; z-index: 200;
-  background: rgba(61,44,44,.88);
-  display: flex; align-items: center; justify-content: center;
-  opacity: 0; pointer-events: none; transition: opacity .3s;
-  backdrop-filter: blur(14px);
-}
-#lb.open { opacity: 1; pointer-events: all; }
-#lb .lb-inner {
-  background: #fff; padding: 14px 14px 40px;
-  box-shadow: 0 8px 48px rgba(0,0,0,.28);
-  max-width: 88vw; max-height: 88vh;
-}
-#lb img { max-width: 100%; max-height: 72vh; display: block; }
-#lb .lb-cap {
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic; font-size: 13px; color: var(--text-l);
-  text-align: center; margin-top: 10px;
-}
-#lb-close {
-  position: absolute; top: 18px; right: 18px;
-  background: rgba(255,255,255,.9); border: none;
-  width: 34px; height: 34px; border-radius: 50%;
-  font-size: 16px; cursor: pointer; color: var(--text);
-  display: flex; align-items: center; justify-content: center;
-}
-
-/* ══ MUSIC ══ */
-#mbtn {
-  position: fixed; bottom: 22px; left: 22px; z-index: 50;
-  width: 40px; height: 40px; border-radius: 50%;
-  background: #fff; border: 1px solid var(--rose-l);
-  font-size: 15px; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 2px 10px rgba(60,30,30,.09);
-  transition: all .2s; color: var(--text);
-}
-#mbtn:hover { border-color: var(--rose); }
-
-/* ══ SHAKE ══ */
-@keyframes shake {
-  0%,100%{transform:translateX(0)} 20%{transform:translateX(-9px)}
-  40%{transform:translateX(9px)}   60%{transform:translateX(-6px)}
-  80%{transform:translateX(6px)}
-}
-.shake { animation: shake .38s ease; }
-
-/* ══ FINAL ══ */
-.final-rose {
-  font-size: 52px; text-align: center; margin: 8px 0;
-  animation: pulse-rose 1.6s ease-in-out infinite;
-}
-@keyframes pulse-rose {
-  0%,100%{transform:scale(1)} 50%{transform:scale(1.12)}
-}
-
-@media(max-width:400px){
-  .panel { padding: 38px 26px 36px; }
-  .display { font-size: 38px; }
-  .polaroid img,.polaroid .ph-placeholder { width:100px; height:90px; }
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>تولدت مبارک غزل جونم 🎂</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100;300;400;500;700;900&family=Lalezar&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-<!-- BG PETALS -->
-<div class="bg" id="bg"></div>
+  <!-- ===== AUDIO ===== -->
+  <audio id="bg-music" loop>
+    <source src="music.mp3" type="audio/mpeg" />
+  </audio>
 
-<!-- MUSIC -->
-<button id="mbtn" title="موسیقی">♪</button>
-<audio id="aud" loop preload="none">
-  <source src="https://cdn.pixabay.com/download/audio/2024/02/16/audio_db2e81ebdd.mp3" type="audio/mp3">
-</audio>
+  <!-- ===== MUSIC TOGGLE (hidden until after lock screen) ===== -->
+  <button id="music-btn" class="music-btn hidden" aria-label="toggle music">
+    <span class="note-icon">🎵</span>
+  </button>
 
-<!-- LIGHTBOX -->
-<div id="lb" onclick="closeLb()">
-  <button id="lb-close" onclick="closeLb()">×</button>
-  <div class="lb-inner" onclick="e=>e.stopPropagation()">
-    <img id="lb-img" src="" alt="">
-    <p class="lb-cap">یه خاطره‌ی قشنگ 🌸</p>
-  </div>
-</div>
+  <!-- ===== CONFETTI CANVAS ===== -->
+  <canvas id="confetti-canvas"></canvas>
 
-<!-- ════ PAGE 1 · LOCK ════ -->
-<div class="page active" id="p-lock">
-  <div class="panel" id="panel-lock">
-    <p class="eyebrow">یه سورپرایز داری</p>
-    <h1 class="display">رمز<em>ت</em><br>رو بزن</h1>
-    <p class="caption">همون که هر روز بازش می‌کنی</p>
+  <!-- ===== SLIDE WRAPPER ===== -->
+  <div class="slides-wrapper" id="slidesWrapper">
 
-    <div class="pin-area">
-      <div class="pin-dots" id="dots">
-        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
-        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+    <!-- ========== SLIDE 1: LOCK SCREEN ========== -->
+    <section class="slide" id="slide-lock">
+      <div class="lock-bg">
+        <div class="lock-blur-overlay"></div>
+
+        <!-- Status bar -->
+        <div class="status-bar">
+          <span class="status-time" id="lock-time">۱۲:۰۰</span>
+          <div class="status-icons">
+            <svg width="17" height="12" viewBox="0 0 17 12" fill="white" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="3" width="3" height="9" rx="1"/><rect x="4.5" y="2" width="3" height="10" rx="1"/><rect x="9" y="0" width="3" height="12" rx="1"/><rect x="13.5" y="1" width="3" height="11" rx="1" opacity=".4"/></svg>
+            <svg width="16" height="12" viewBox="0 0 16 12" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M8 3C5.5 3 3.3 4.1 1.8 5.8L0 4C2 1.9 4.9 0.6 8 0.6s6 1.3 8 3.4l-1.8 1.8C12.7 4.1 10.5 3 8 3z"/><path d="M8 6.5c-1.5 0-2.9.6-3.9 1.6L2.3 6.3C3.7 4.9 5.7 4 8 4s4.3.9 5.7 2.3l-1.8 1.8C10.9 7.1 9.5 6.5 8 6.5z"/><circle cx="8" cy="11" r="1.5"/></svg>
+            <svg width="25" height="12" viewBox="0 0 25 12" fill="white" xmlns="http://www.w3.org/2000/svg"><rect x="0.5" y="0.5" width="21" height="11" rx="3.5" stroke="white" stroke-opacity=".35" fill="none"/><rect x="2" y="2" width="17" height="8" rx="2" fill="white"/><path d="M23 4v4a2 2 0 000-4z" fill="white" opacity=".4"/></svg>
+          </div>
+        </div>
+
+        <!-- Date & time -->
+        <div class="lock-center">
+          <p class="lock-date">۱۵ خرداد ۱۴۰۴</p>
+          <h1 class="lock-clock" id="lock-clock">۱۲:۰۰</h1>
+          <p class="lock-subtitle">روز خاص غزل جونم 💗</p>
+        </div>
+
+        <!-- PIN area -->
+        <div class="pin-area">
+          <p class="pin-prompt">برای ورود بکش و رمز گوشیتو بزن</p>
+
+          <!-- Slide to unlock -->
+          <div class="slide-unlock-track" id="slideTrack">
+            <div class="slide-unlock-thumb" id="slideThumb">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M8 5l7 7-7 7" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+            </div>
+            <span class="slide-unlock-text" id="slideText">slide to unlock</span>
+          </div>
+
+          <!-- PIN dots -->
+          <div class="pin-dots" id="pinDots">
+            <span class="dot" id="d0"></span>
+            <span class="dot" id="d1"></span>
+            <span class="dot" id="d2"></span>
+            <span class="dot" id="d3"></span>
+            <span class="dot" id="d4"></span>
+            <span class="dot" id="d5"></span>
+          </div>
+
+          <!-- Keypad -->
+          <div class="keypad" dir="ltr" id="keypad">
+            <button class="key" data-n="1"><span>۱</span><small></small></button>
+            <button class="key" data-n="2"><span>۲</span><small>ABC</small></button>
+            <button class="key" data-n="3"><span>۳</span><small>DEF</small></button>
+            <button class="key" data-n="4"><span>۴</span><small>GHI</small></button>
+            <button class="key" data-n="5"><span>۵</span><small>JKL</small></button>
+            <button class="key" data-n="6"><span>۶</span><small>MNO</small></button>
+            <button class="key" data-n="7"><span>۷</span><small>PQRS</small></button>
+            <button class="key" data-n="8"><span>۸</span><small>TUV</small></button>
+            <button class="key" data-n="9"><span>۹</span><small>WXYZ</small></button>
+            <button class="key key-empty"></button>
+            <button class="key" data-n="0"><span>۰</span><small>+</small></button>
+            <button class="key key-del" id="delKey">⌫</button>
+          </div>
+        </div>
       </div>
-      <div class="numpad">
-        <button class="nk" onclick="num('1')">1</button>
-        <button class="nk" onclick="num('2')">2</button>
-        <button class="nk" onclick="num('3')">3</button>
-        <button class="nk" onclick="num('4')">4</button>
-        <button class="nk" onclick="num('5')">5</button>
-        <button class="nk" onclick="num('6')">6</button>
-        <button class="nk" onclick="num('7')">7</button>
-        <button class="nk" onclick="num('8')">8</button>
-        <button class="nk" onclick="num('9')">9</button>
-        <button class="nk ghost" onclick="clr()">پاک</button>
-        <button class="nk" onclick="num('0')">0</button>
-        <button class="nk ghost" onclick="del()">⌫</button>
+    </section>
+
+    <!-- ========== SLIDE 2: HERO ========== -->
+    <section class="slide hidden-slide" id="slide-hero">
+      <div class="hero-bg">
+        <!-- Floating elements -->
+        <div class="floaties" id="floaties"></div>
+
+        <div class="hero-glass">
+          <div class="crown">👑</div>
+          <p class="hero-date-top">۱۵ خرداد</p>
+          <h1 class="hero-title">تولدت مبارک<br/><span class="hero-name">غزل جونم</span></h1>
+          <p class="hero-poem">امروز روزیه که تو به دنیا اومدی<br/>و دنیا از اون روز، قشنگ‌تر شد 🌸</p>
+          <div class="hero-badge">
+            <span class="badge-num">۲۰</span>
+            <span class="badge-text">سالگی<br/>مبارک</span>
+          </div>
+          <p class="hero-sub">بیست سال از قشنگ‌ترین لحظه‌ی دنیا گذشت 💕</p>
+        </div>
+
+        <!-- Nav arrow -->
+        <button class="nav-arrow nav-next" data-target="slide-cake" aria-label="بعدی">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
       </div>
-      <p class="err-msg" id="err">رمز اشتباهه 🙈</p>
-    </div>
-  </div>
-</div>
+    </section>
 
-<!-- ════ PAGE 2 · WELCOME ════ -->
-<div class="page" id="p-welcome">
-  <div class="panel">
-    <div class="steps">
-      <div class="step done"></div>
-      <div class="step cur"></div>
-      <div class="step"></div>
-      <div class="step"></div>
-    </div>
-    <p class="eyebrow">امروز روز توئه</p>
-    <h1 class="display">تولدت<br><em>مبارک</em></h1>
-    <p class="eyebrow" style="font-size:18px;margin-top:4px">غزلم 🌸</p>
+    <!-- ========== SLIDE 3: CAKE ========== -->
+    <section class="slide hidden-slide" id="slide-cake">
+      <div class="cake-bg">
+        <button class="nav-arrow nav-prev" data-target="slide-hero" aria-label="قبلی">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
 
-    <div class="divider"><span class="divider-glyph">✦</span></div>
+        <h2 class="slide-title">کیک تولدت آمادست! 🎂</h2>
+        <p class="slide-sub">آرزو کن عزیزدلم</p>
 
-    <div class="message-block">
-      هر وقت کنارتم،<br>
-      دنیا یه جور دیگه‌ای رنگ داره.<br>
-      ممنونم که هستی.<br>
-      دوستت دارم.
-    </div>
+        <!-- SVG Cake -->
+        <div class="cake-container">
+          <svg id="birthdayCake" viewBox="0 0 300 280" xmlns="http://www.w3.org/2000/svg">
+            <!-- Plate -->
+            <ellipse cx="150" cy="255" rx="130" ry="14" fill="#f8c8d4" opacity=".6"/>
+            <!-- Bottom tier -->
+            <rect x="30" y="190" width="240" height="65" rx="18" fill="#f9a8c9"/>
+            <rect x="30" y="190" width="240" height="20" rx="10" fill="#fcbad6"/>
+            <!-- Frosting drips bottom -->
+            <path d="M50 190 Q65 175 80 190 Q95 175 110 190 Q125 175 140 190 Q155 175 170 190 Q185 175 200 190 Q215 175 230 190 Q245 175 250 190" fill="white" opacity=".85"/>
+            <!-- Middle tier -->
+            <rect x="60" y="130" width="180" height="62" rx="15" fill="#f7b8d8"/>
+            <rect x="60" y="130" width="180" height="18" rx="9" fill="#fac8e2"/>
+            <!-- Frosting drips middle -->
+            <path d="M78 130 Q90 116 102 130 Q114 116 126 130 Q138 116 150 130 Q162 116 174 130 Q186 116 198 130 Q210 116 222 130 Q228 116 232 130" fill="white" opacity=".85"/>
+            <!-- Top tier -->
+            <rect x="95" y="82" width="110" height="50" rx="12" fill="#f5a8cc"/>
+            <rect x="95" y="82" width="110" height="15" rx="8" fill="#f9bdd9"/>
+            <!-- Frosting drips top -->
+            <path d="M108 82 Q118 70 128 82 Q138 70 148 82 Q158 70 168 82 Q178 70 188 82 Q195 70 198 82" fill="white" opacity=".85"/>
 
-    <button class="btn" onclick="go(3)">ادامه →</button>
-  </div>
-</div>
+            <!-- Decorations -->
+            <circle cx="90" cy="212" r="6" fill="#ff8fab"/>
+            <circle cx="130" cy="200" r="5" fill="#ffb3c6"/>
+            <circle cx="170" cy="210" r="6" fill="#ff8fab"/>
+            <circle cx="210" cy="202" r="5" fill="#ffb3c6"/>
+            <circle cx="110" cy="152" r="5" fill="#ff8fab"/>
+            <circle cx="150" cy="144" r="6" fill="#c77dff"/>
+            <circle cx="190" cy="152" r="5" fill="#ff8fab"/>
 
-<!-- ════ PAGE 3 · CAKE ════ -->
-<div class="page" id="p-cake">
-  <div class="panel">
-    <div class="steps">
-      <div class="step done"></div>
-      <div class="step done"></div>
-      <div class="step cur"></div>
-      <div class="step"></div>
-    </div>
-    <p class="eyebrow">یه آرزو بکن</p>
-    <h2 class="heading">شمع‌ها رو فوت کن</h2>
+            <!-- Candles -->
+            <g id="candle1">
+              <rect x="113" y="52" width="10" height="32" rx="5" fill="#ff8fab"/>
+              <rect x="113" y="52" width="10" height="10" rx="5" fill="#ffb3c6"/>
+              <g class="flame" id="flame1">
+                <ellipse cx="118" cy="46" rx="5" ry="8" fill="#FFD700" opacity=".9"/>
+                <ellipse cx="118" cy="43" rx="3" ry="5" fill="#FFA500"/>
+                <ellipse cx="118" cy="41" rx="1.5" ry="3" fill="white" opacity=".7"/>
+              </g>
+            </g>
+            <g id="candle2">
+              <rect x="133" y="48" width="10" height="36" rx="5" fill="#c77dff"/>
+              <rect x="133" y="48" width="10" height="10" rx="5" fill="#d9a4ff"/>
+              <g class="flame" id="flame2">
+                <ellipse cx="138" cy="42" rx="5" ry="8" fill="#FFD700" opacity=".9"/>
+                <ellipse cx="138" cy="39" rx="3" ry="5" fill="#FFA500"/>
+                <ellipse cx="138" cy="37" rx="1.5" ry="3" fill="white" opacity=".7"/>
+              </g>
+            </g>
+            <g id="candle3">
+              <rect x="153" y="50" width="10" height="34" rx="5" fill="#ff8fab"/>
+              <rect x="153" y="50" width="10" height="10" rx="5" fill="#ffb3c6"/>
+              <g class="flame" id="flame3">
+                <ellipse cx="158" cy="44" rx="5" ry="8" fill="#FFD700" opacity=".9"/>
+                <ellipse cx="158" cy="41" rx="3" ry="5" fill="#FFA500"/>
+                <ellipse cx="158" cy="39" rx="1.5" ry="3" fill="white" opacity=".7"/>
+              </g>
+            </g>
+            <g id="candle4">
+              <rect x="173" y="52" width="10" height="32" rx="5" fill="#c77dff"/>
+              <rect x="173" y="52" width="10" height="10" rx="5" fill="#d9a4ff"/>
+              <g class="flame" id="flame4">
+                <ellipse cx="178" cy="46" rx="5" ry="8" fill="#FFD700" opacity=".9"/>
+                <ellipse cx="178" cy="43" rx="3" ry="5" fill="#FFA500"/>
+                <ellipse cx="178" cy="41" rx="1.5" ry="3" fill="white" opacity=".7"/>
+              </g>
+            </g>
 
-    <div class="cake-wrap">
-      <svg class="cake-svg" id="cakesvg" viewBox="0 0 140 140" onclick="blow()" xmlns="http://www.w3.org/2000/svg">
-        <!-- shadow -->
-        <ellipse cx="70" cy="126" rx="50" ry="7" fill="#e8d6d6" opacity=".4"/>
-        <!-- bottom tier -->
-        <rect x="18" y="90" width="104" height="36" rx="6" fill="#f2c9d0"/>
-        <rect x="18" y="90" width="104" height="8"  rx="6" fill="#edddd4"/>
-        <!-- tier 2 -->
-        <rect x="30" y="62" width="80"  height="30" rx="5" fill="#edddd4"/>
-        <rect x="30" y="62" width="80"  height="7"  rx="5" fill="#f5e6e0"/>
-        <!-- frosting drips -->
-        <path d="M30 68 Q36 58 42 68 Q48 58 54 68 Q60 58 66 68 Q72 58 78 68 Q84 58 90 68 Q96 58 102 68 Q108 58 110 64" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".7"/>
-        <!-- top tier -->
-        <rect x="44" y="40" width="52" height="24" rx="4" fill="#f2c9d0"/>
-        <rect x="44" y="40" width="52" height="6"  rx="4" fill="#fde8f1"/>
-        <!-- rose deco -->
-        <circle cx="70" cy="87" r="5" fill="#d4788a" opacity=".5"/>
-        <circle cx="52" cy="87" r="4" fill="#d4788a" opacity=".35"/>
-        <circle cx="88" cy="87" r="4" fill="#d4788a" opacity=".35"/>
-        <!-- candles -->
-        <rect x="55" y="24" width="7" height="18" rx="3" fill="#c9aff0"/>
-        <rect x="66.5" y="19" width="7" height="22" rx="3" fill="#f2c9d0"/>
-        <rect x="78" y="24" width="7" height="18" rx="3" fill="#b5c4b1"/>
-        <!-- wicks -->
-        <line x1="58.5" y1="24" x2="58.5" y2="21" stroke="#3d2c2c" stroke-width="1.2" stroke-linecap="round"/>
-        <line x1="70"   y1="19" x2="70"   y2="16" stroke="#3d2c2c" stroke-width="1.2" stroke-linecap="round"/>
-        <line x1="81.5" y1="24" x2="81.5" y2="21" stroke="#3d2c2c" stroke-width="1.2" stroke-linecap="round"/>
-        <!-- flames group -->
-        <g id="flames">
-          <g class="flame-g">
-            <ellipse cx="58.5" cy="19" rx="4.5" ry="6" fill="#ffd040" opacity=".9"/>
-            <ellipse cx="58.5" cy="18" rx="2.5" ry="4" fill="#fff5c0"/>
-          </g>
-          <g class="flame-g" style="animation-delay:.06s">
-            <ellipse cx="70" cy="14" rx="4.5" ry="6" fill="#ffd040" opacity=".9"/>
-            <ellipse cx="70" cy="13" rx="2.5" ry="4" fill="#fff5c0"/>
-          </g>
-          <g class="flame-g" style="animation-delay:.12s">
-            <ellipse cx="81.5" cy="19" rx="4.5" ry="6" fill="#ffd040" opacity=".9"/>
-            <ellipse cx="81.5" cy="18" rx="2.5" ry="4" fill="#fff5c0"/>
-          </g>
-        </g>
-      </svg>
-      <p class="cake-tip" id="caketip">روش کلیک کن</p>
-    </div>
+            <!-- "20" text on cake -->
+            <text x="150" y="170" text-anchor="middle" font-family="Lalezar, sans-serif" font-size="22" fill="white" opacity=".9">۲۰</text>
+          </svg>
 
-    <button class="btn" id="cake-next" onclick="go(4)" style="display:none;margin-top:18px">ادامه →</button>
-  </div>
-</div>
+          <!-- Wish message (hidden) -->
+          <div class="wish-msg hidden" id="wishMsg">
+            <span>🌟</span>تولدت مبارک عشقم<span>🌟</span>
+          </div>
+        </div>
 
-<!-- ════ PAGE 4 · PHOTOS ════ -->
-<div class="page" id="p-photos">
-  <div class="panel">
-    <div class="steps">
-      <div class="step done"></div>
-      <div class="step done"></div>
-      <div class="step done"></div>
-      <div class="step cur"></div>
-    </div>
+        <button class="blow-btn" id="blowBtn">💨 فوت کن</button>
+        
 
-    <p class="eyebrow">یه عالمه خاطره</p>
-    <h2 class="heading">خاطره‌های ما 📸</h2>
-
-    <!-- 3 polaroid slots -->
-    <div class="polaroid-wall" id="wall">
-      <div class="polaroid" id="slot0" onclick="slotClick(0)">
-        <div class="ph-placeholder" id="ph0">＋</div>
-        <span class="polaroid-label">اضافه کن</span>
+        <button class="nav-arrow nav-next" data-target="slide-gallery" aria-label="بعدی">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
       </div>
-      <div class="polaroid" id="slot1" onclick="slotClick(1)">
-        <div class="ph-placeholder" id="ph1">＋</div>
-        <span class="polaroid-label">اضافه کن</span>
+    </section>
+
+    <!-- ========== SLIDE 4: GALLERY ========== -->
+    <section class="slide hidden-slide" id="slide-gallery">
+      <div class="gallery-bg">
+        <button class="nav-arrow nav-prev" data-target="slide-cake" aria-label="قبلی">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+
+        <h2 class="slide-title">خاطره‌هامون 📸</h2>
+        <p class="slide-sub">لحظه‌هایی که یادم نمیره</p>
+
+        <div class="polaroid-grid" id="polaroidGrid">
+          <div class="polaroid" style="--r:-3deg"><img src="images/photo1.jpg" alt="عکس ۱" /><p>اولین قدم‌هامون 🌸</p></div>
+          <div class="polaroid" style="--r:2deg"><img src="images/photo2.jpg" alt="عکس ۲" /><p>خنده‌های بی‌دلیل 😂</p></div>
+          <div class="polaroid" style="--r:-2deg"><img src="images/photo3.jpg" alt="عکس ۳" /><p>کنار هم 💕</p></div>
+          <div class="polaroid" style="--r:4deg"><img src="images/photo4.jpg" alt="عکس ۴" /><p>بهترین روزها ✨</p></div>
+          <div class="polaroid" style="--r:-4deg"><img src="images/photo5.jpg" alt="عکس ۵" /><p>لحظه‌های ناب 🌷</p></div>
+          <div class="polaroid" style="--r:1deg"><img src="images/photo6.jpg" alt="عکس ۶" /><p>دلم میخواد 🥰</p></div>
+          <div class="polaroid" style="--r:-1deg"><img src="images/photo7.jpg" alt="عکس ۷" /><p>همیشه باهم 💗</p></div>
+          <div class="polaroid" style="--r:3deg"><img src="images/photo8.jpg" alt="عکس ۸" /><p>تا ابد 🌙</p></div>
+        </div>
+
+        <button class="nav-arrow nav-next" data-target="slide-letter" aria-label="بعدی">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
       </div>
-      <div class="polaroid" id="slot2" onclick="slotClick(2)">
-        <div class="ph-placeholder" id="ph2">＋</div>
-        <span class="polaroid-label">اضافه کن</span>
+    </section>
+
+    <!-- ========== SLIDE 5: LETTER ========== -->
+    <section class="slide hidden-slide" id="slide-letter">
+      <div class="letter-bg">
+        <button class="nav-arrow nav-prev" data-target="slide-gallery" aria-label="قبلی">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+
+        <div class="letter-envelope-icon">💌</div>
+
+        <div class="letter-glass" id="letterGlass">
+          <div class="letter-header">
+            <span class="letter-seal">❤</span>
+            <h2 class="letter-title">نامه‌ای برای غزل جونم</h2>
+            <div class="letter-divider"></div>
+          </div>
+
+          <div class="letter-body" id="letterBody">
+            <p>غزل عزیزم،</p>
+            <p>
+              امروز یه روز خاصه. روزی که بیست سال پیش، دنیا یه هدیه‌ی بی‌نظیر دریافت کرد — تو.
+              نمی‌دونم چطور بگم که وجود تو تو زندگیم چقدر معنا داره.
+            </p>
+            <p>
+              هر وقت میخندی، انگار تموم غم‌های دنیا یه لحظه فراموش میشه. هر وقت نگام میکنی،
+              احساس می‌کنم دنیا ارزش داره. هر وقت کنارمی، می‌فهمم که معنای خوشبختی چیه.
+            </p>
+            <p>
+              بهترین انتخاب زندگیم پیشنهاد شطرنج بازی با تو بود :)
+            </p>
+            <p>
+              تولدت مبارک باد، عشقم. آرزو می‌کنم هر روزت پر از لبخند، هر لحظه‌ات پر از شادی،
+              و هر قدمت پر از موفقیت باشه. دوستت دارم، بیشتر از هر چیزی.
+            </p>
+            <p class="letter-sign">با عشق، همیشه مال توام 🌹</p>
+          </div>
+        </div>
+
+        <div class="final-hearts" id="finalHearts"></div>
       </div>
-    </div>
+    </section>
 
-    <input type="file" id="photo-input" accept="image/*">
+  </div><!-- end slides-wrapper -->
 
-    <button class="btn" onclick="showFinal()">پایان ✦</button>
-    <button class="btn-ghost" onclick="showFinal()">رد کن</button>
-  </div>
-</div>
-
-<!-- ════ PAGE 5 · FINAL ════ -->
-<div class="page" id="p-final">
-  <div class="panel" style="text-align:center">
-    <p class="eyebrow">برای همیشه</p>
-    <h1 class="display"><em>دوستت</em><br>دارم</h1>
-    <div class="final-rose">🌹</div>
-    <p class="body-text">امیدوارم این سال پر از لحظه‌های<br>قشنگ باشه، غزلم.</p>
-    <div class="divider" style="margin:24px 0"><span class="divider-glyph">✦</span></div>
-    <p class="caption">با تمام عشق — برای غزل</p>
-  </div>
-</div>
-
-<canvas id="conf-c" style="position:fixed;inset:0;pointer-events:none;z-index:30"></canvas>
-
-<script>
-// ── PETALS BG ──
-const bg = document.getElementById('bg');
-const PETALS = ['🌸','🌷','✿','❀'];
-function makePetal(){
-  const el = document.createElement('div');
-  el.className = 'bg-petal';
-  el.textContent = PETALS[Math.floor(Math.random()*PETALS.length)];
-  el.style.left = Math.random()*100 + 'vw';
-  el.style.fontSize = (18+Math.random()*18) + 'px';
-  const dur = 9+Math.random()*10;
-  el.style.animationDuration = dur + 's';
-  el.style.animationDelay = (-Math.random()*dur) + 's';
-  el.style.opacity = '0';
-  bg.appendChild(el);
-  setTimeout(()=>el.remove(), dur*1000+1000);
-}
-for(let i=0;i<14;i++) makePetal();
-setInterval(makePetal, 2800);
-
-// ── PIN ──
-const PASS = '157850';
-let pin = '';
-
-function num(n){
-  if(pin.length>=6) return;
-  pin += n; render();
-  if(pin.length===6) check();
-}
-function del(){ pin=pin.slice(0,-1); render(); }
-function clr(){ pin=''; render(); }
-function render(){
-  document.querySelectorAll('#dots .dot').forEach((d,i)=>{
-    d.classList.toggle('on', i<pin.length);
-  });
-}
-function check(){
-  if(pin===PASS){
-    document.getElementById('err').classList.remove('show');
-    setTimeout(()=>go(2), 350);
-  } else {
-    const panel = document.getElementById('panel-lock');
-    panel.classList.add('shake');
-    setTimeout(()=>panel.classList.remove('shake'),450);
-    document.getElementById('err').classList.add('show');
-    pin=''; render();
-  }
-}
-
-// ── PAGES ──
-const PAGE_IDS = ['p-lock','p-welcome','p-cake','p-photos','p-final'];
-function go(n){
-  document.querySelectorAll('.page').forEach(p=>{
-    p.classList.remove('active');
-    p.classList.add('out');
-  });
-  setTimeout(()=>{
-    document.querySelectorAll('.page').forEach(p=>p.classList.remove('out'));
-    document.getElementById(PAGE_IDS[n-1]).classList.add('active');
-  }, 480);
-}
-
-// ── CAKE ──
-let blown = false;
-function blow(){
-  if(blown) return; blown=true;
-  document.getElementById('flames').style.display='none';
-  document.getElementById('caketip').textContent='🎂 آرزوت برآورده شه!';
-  document.getElementById('cake-next').style.display='block';
-  confetti();
-}
-
-// ── POLAROIDS ──
-let active_slot = 0;
-function slotClick(i){
-  active_slot = i;
-  const inp = document.getElementById('photo-input');
-  inp.onchange = e => {
-    if(!e.target.files[0]) return;
-    const url = URL.createObjectURL(e.target.files[0]);
-    const slot = document.getElementById('slot'+i);
-    const ph   = document.getElementById('ph'+i);
-    // replace placeholder with img
-    let img = slot.querySelector('img');
-    if(!img){
-      img = document.createElement('img');
-      img.style.width='120px'; img.style.height='110px';
-      img.style.objectFit='cover'; img.style.display='block';
-      slot.replaceChild(img, ph);
-      slot.onclick = ()=>openLb(url);
-    }
-    img.src = url;
-    // update label
-    const lbl = slot.querySelector('.polaroid-label');
-    const labels = ['لحظه اول','خاطره‌ی خوب','عشق'];
-    if(lbl) lbl.textContent = labels[i] || '♡';
-    inp.value='';
-  };
-  inp.click();
-}
-
-function openLb(src){
-  document.getElementById('lb-img').src=src;
-  document.getElementById('lb').classList.add('open');
-}
-function closeLb(){ document.getElementById('lb').classList.remove('open'); }
-
-// ── FINAL ──
-function showFinal(){ confetti(); setTimeout(()=>go(5),300); }
-
-// ── CONFETTI ──
-const cc = document.getElementById('conf-c');
-const cx = cc.getContext('2d');
-function resizeCc(){ cc.width=innerWidth; cc.height=innerHeight; }
-resizeCc(); window.addEventListener('resize',resizeCc);
-
-let pieces=[]; let cRunning=false;
-function confetti(){
-  cRunning=true; pieces=[];
-  const cols=['#d4788a','#c9aff0','#b5c4b1','#edddd4','#fff','#fbbf8a'];
-  for(let i=0;i<130;i++) pieces.push({
-    x:Math.random()*cc.width, y:-10-Math.random()*150,
-    vx:(Math.random()-.5)*4, vy:Math.random()*3+2,
-    r:Math.random()*6+3, rot:Math.random()*6.28,
-    rs:(Math.random()-.5)*.1,
-    col:cols[Math.floor(Math.random()*cols.length)],
-    sq:Math.random()>.4
-  });
-  setTimeout(()=>{ cRunning=false; pieces=[]; cx.clearRect(0,0,cc.width,cc.height); },4500);
-}
-function loopConf(){
-  cx.clearRect(0,0,cc.width,cc.height);
-  if(cRunning) pieces.forEach(p=>{
-    p.x+=p.vx; p.y+=p.vy; p.rot+=p.rs; p.vy+=.07;
-    cx.save(); cx.translate(p.x,p.y); cx.rotate(p.rot);
-    cx.fillStyle=p.col;
-    if(p.sq) cx.fillRect(-p.r/2,-p.r/4,p.r,p.r/2);
-    else { cx.beginPath(); cx.arc(0,0,p.r/2,0,Math.PI*2); cx.fill(); }
-    cx.restore();
-  });
-  requestAnimationFrame(loopConf);
-}
-loopConf();
-
-// ── MUSIC ──
-const aud=document.getElementById('aud'), mb=document.getElementById('mbtn');
-let mp=false;
-mb.onclick=()=>{
-  if(!mp){ aud.play().catch(()=>{}); mb.textContent='♫'; mp=true; }
-  else    { aud.pause(); mb.textContent='♪'; mp=false; }
-};
-</script>
+  <script src="script.js"></script>
 </body>
 </html>
